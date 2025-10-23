@@ -1,0 +1,294 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Compte API",
+        "description": "Documentation API pour la gestion des comptes",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/api/v1/clients": {
+            "get": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Liste paginée des clients",
+                "description": "GET /api/v1/clients",
+                "operationId": "db146ec456a7b2b348ca6f1280035e54",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/v1/clients/{client}": {
+            "get": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Détail d'un client",
+                "description": "GET /api/v1/clients/{client}",
+                "operationId": "4ea51e19cae6b61928a99689e61aafc3",
+                "parameters": [
+                    {
+                        "name": "client",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/comptes/getAll": {
+            "get": {
+                "tags": [
+                    "Comptes"
+                ],
+                "summary": "Liste complète (admin)",
+                "operationId": "5f7fd7b6793318662895b1e6c9d7dc57",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/comptes": {
+            "post": {
+                "tags": [
+                    "Comptes"
+                ],
+                "summary": "Créer un compte",
+                "operationId": "025330f51212427a653e68bc74984252",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "soldeInitial",
+                                    "devise",
+                                    "client"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "soldeInitial": {
+                                        "type": "number"
+                                    },
+                                    "devise": {
+                                        "type": "string"
+                                    },
+                                    "client": {
+                                        "$ref": "#/components/schemas/Client"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Compte"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/oauth/token": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Obtenir un token (password grant)",
+                "operationId": "7631a3fca58f1be6f4eca22dfed204bd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "grant_type": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "client_id": {
+                                        "type": "string"
+                                    },
+                                    "client_secret": {
+                                        "type": "string"
+                                    },
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "scope": {
+                                        "type": "string",
+                                        "example": "*"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token_type": {
+                                            "type": "string"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer"
+                                        },
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "refresh_token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Client": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "nom": {
+                        "type": "string"
+                    },
+                    "prenom": {
+                        "type": "string"
+                    },
+                    "titulaire": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "telephone": {
+                        "type": "string"
+                    },
+                    "adresse": {
+                        "type": "string"
+                    },
+                    "nci": {
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Compte": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "numeroCompte": {
+                        "type": "string"
+                    },
+                    "titulaire": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "solde": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "devise": {
+                        "type": "string"
+                    },
+                    "dateCreation": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "statut": {
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Clients",
+            "description": "Clients"
+        },
+        {
+            "name": "Comptes",
+            "description": "Comptes"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ]
+}
